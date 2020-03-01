@@ -6,4 +6,18 @@
 //  Copyright © 2020 Nikolay Yarlychenko. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+
+class ButtonsView: UIView {
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+    
+    func setupView() {
+        backgroundColor = .clear
+        
+    }
+}

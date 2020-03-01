@@ -7,23 +7,35 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		955CAD0D24018EDF00C2A31F /* CameraButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CAD0C24018EDF00C2A31F /* CameraButton.swift */; };
+		955CAD0F24018F0D00C2A31F /* Scrim.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CAD0E24018F0D00C2A31F /* Scrim.swift */; };
+		955CAD132402E0C300C2A31F /* VideoEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CAD122402E0C300C2A31F /* VideoEditView.swift */; };
+		955CAD1524043E1700C2A31F /* ButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CAD1424043E1700C2A31F /* ButtonsView.swift */; };
 		9569ED8423F844520067282A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9569ED8323F844520067282A /* AppDelegate.swift */; };
 		9569ED8623F844520067282A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9569ED8523F844520067282A /* SceneDelegate.swift */; };
-		9569ED8823F844520067282A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9569ED8723F844520067282A /* ViewController.swift */; };
+		9569ED8823F844520067282A /* ScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9569ED8723F844520067282A /* ScannerViewController.swift */; };
 		9569ED8B23F844520067282A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9569ED8923F844520067282A /* Main.storyboard */; };
 		9569ED8D23F844560067282A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9569ED8C23F844560067282A /* Assets.xcassets */; };
 		9569ED9023F844560067282A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9569ED8E23F844560067282A /* LaunchScreen.storyboard */; };
+		957A130A23FAC35C005CDC35 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957A130923FAC35C005CDC35 /* ActionButton.swift */; };
+		9585742E23FB2BDD003CE406 /* QRCodeFrameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9585742D23FB2BDD003CE406 /* QRCodeFrameView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		955CAD0C24018EDF00C2A31F /* CameraButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraButton.swift; sourceTree = "<group>"; };
+		955CAD0E24018F0D00C2A31F /* Scrim.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scrim.swift; sourceTree = "<group>"; };
+		955CAD122402E0C300C2A31F /* VideoEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditView.swift; sourceTree = "<group>"; };
+		955CAD1424043E1700C2A31F /* ButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsView.swift; sourceTree = "<group>"; };
 		9569ED8023F844510067282A /* QRScanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QRScanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9569ED8323F844520067282A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9569ED8523F844520067282A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		9569ED8723F844520067282A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9569ED8723F844520067282A /* ScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerViewController.swift; sourceTree = "<group>"; };
 		9569ED8A23F844520067282A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9569ED8C23F844560067282A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9569ED8F23F844560067282A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9569ED9123F844560067282A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		957A130923FAC35C005CDC35 /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		9585742D23FB2BDD003CE406 /* QRCodeFrameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeFrameView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,11 +70,17 @@
 			children = (
 				9569ED8323F844520067282A /* AppDelegate.swift */,
 				9569ED8523F844520067282A /* SceneDelegate.swift */,
-				9569ED8723F844520067282A /* ViewController.swift */,
+				9569ED8723F844520067282A /* ScannerViewController.swift */,
 				9569ED8923F844520067282A /* Main.storyboard */,
 				9569ED8C23F844560067282A /* Assets.xcassets */,
 				9569ED8E23F844560067282A /* LaunchScreen.storyboard */,
 				9569ED9123F844560067282A /* Info.plist */,
+				957A130923FAC35C005CDC35 /* ActionButton.swift */,
+				9585742D23FB2BDD003CE406 /* QRCodeFrameView.swift */,
+				955CAD0C24018EDF00C2A31F /* CameraButton.swift */,
+				955CAD0E24018F0D00C2A31F /* Scrim.swift */,
+				955CAD1424043E1700C2A31F /* ButtonsView.swift */,
+				955CAD122402E0C300C2A31F /* VideoEditView.swift */,
 			);
 			path = QRScanner;
 			sourceTree = "<group>";
@@ -138,9 +156,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9569ED8823F844520067282A /* ViewController.swift in Sources */,
+				9585742E23FB2BDD003CE406 /* QRCodeFrameView.swift in Sources */,
+				9569ED8823F844520067282A /* ScannerViewController.swift in Sources */,
 				9569ED8423F844520067282A /* AppDelegate.swift in Sources */,
 				9569ED8623F844520067282A /* SceneDelegate.swift in Sources */,
+				955CAD0F24018F0D00C2A31F /* Scrim.swift in Sources */,
+				957A130A23FAC35C005CDC35 /* ActionButton.swift in Sources */,
+				955CAD1524043E1700C2A31F /* ButtonsView.swift in Sources */,
+				955CAD132402E0C300C2A31F /* VideoEditView.swift in Sources */,
+				955CAD0D24018EDF00C2A31F /* CameraButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +311,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 539DQNBLRW;
 				INFOPLIST_FILE = QRScanner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +330,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 539DQNBLRW;
 				INFOPLIST_FILE = QRScanner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

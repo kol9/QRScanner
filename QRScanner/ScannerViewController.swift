@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ScannerViewController.swift
 //  QRScanner
 //
 //  Created by Nikolay Yarlychenko on 15.02.2020.
@@ -14,6 +14,8 @@ import SafariServices
 
 class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AVCapturePhotoCaptureDelegate {
     
+    
+    var lastSearchedURL: String = ""
     
     let minimumZoom: CGFloat = 1.0
     let maximumZoom: CGFloat = 3.0
@@ -53,11 +55,37 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBOutlet weak var videoEditView: VideoEditView!
     
     
+    
+    func openSafariAlert(_ url: String) {
+        let alertController = UIAlertController(title: "\(url)", message: "Open \(url) in Safari?", preferredStyle: .alert)
+        
+        let action1 = UIAlertAction(title: "Open in Safari", style: .default, handler: { _ in
+            
+            if UIApplication.shared.canOpenURL(URL(string: url)!) {
+                UIApplication.shared.open(URL(string : url)!, options: [:], completionHandler: nil)
+            } else {
+                let googleSearchURL =  "https://www.google.co.in/search?q=" + url
+                UIApplication.shared.open(URL(string: googleSearchURL)!, options: [:], completionHandler: {_ in
+                    alertController.dismiss(animated: true, completion: nil)
+                })
+            }
+            
+        })
+        
+        let action2 = UIAlertAction(title: "Cancel", style: .cancel, handler: .none)
+        
+        alertController.addAction(action1)
+        alertController.addAction(action2)
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    
     func qrRecognizingOff() {
         qrCodeFrameView?.isHidden = true
     }
     
     @objc func changeFlashMode() {
+        
         if !flashMode {
             flashMode = true
             
@@ -94,14 +122,11 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         } else {
             photoData = photo.fileDataRepresentation()
         }
-        
-        print("Here")
     }
     
     func isHighDifference(_ a: CGRect, _ b: CGRect)->Bool {
         return abs(a.minX - b.minX + a.minY - b.minY + a.height - b.height) > 5
     }
-    
     
     
     @objc func goToSaveView(isPhoto: Bool) {
@@ -142,7 +167,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     @objc func backToMainView() {
         
-        
         playerLayer.isHidden = true
         self.photoPreview.isHidden = true
         self.photoPreview.image = nil
@@ -162,8 +186,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         switchButton.isEnabled = true
         switchButton.isHidden = false
         videoEditView.isHidden = true
-        
-        
         
         captureSession = AVCaptureSession()
         
@@ -243,25 +265,22 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             isSaveVideo = false
         } else {
             
-            
-            DispatchQueue.global(qos: .background).async {
-                PHPhotoLibrary.requestAuthorization({status in
-                    if status == .authorized {
-                        PHPhotoLibrary.shared().performChanges({
-                            let options = PHAssetResourceCreationOptions()
-                            let creationRequest = PHAssetCreationRequest.forAsset()
-                            creationRequest.addResource(with: .photo, data: self.photoData!, options: options)
-                            
-                        }, completionHandler: {_, error in
-                            if let error = error {
-                                print("Error occurred while saving photo to photo library: \(error)")
-                            }
-                        })
-                    } else {
-                        return
-                    }
-                })
-            }
+            PHPhotoLibrary.requestAuthorization({status in
+                if status == .authorized {
+                    PHPhotoLibrary.shared().performChanges({
+                        let options = PHAssetResourceCreationOptions()
+                        let creationRequest = PHAssetCreationRequest.forAsset()
+                        creationRequest.addResource(with: .photo, data: self.photoData!, options: options)
+                        
+                    }, completionHandler: {_, error in
+                        if let error = error {
+                            print("Error occurred while saving photo to photo library: \(error)")
+                        }
+                    })
+                } else {
+                    return
+                }
+            })
         }
         backToMainView()
     }
@@ -304,18 +323,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
     
     func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        let devices: NSArray = AVCaptureDevice.devices() as NSArray;
-        for de in devices {
-            let deviceConverted = de as! AVCaptureDevice
-            if(deviceConverted.position == position){
-                return deviceConverted
-            }
-        }
-        return nil
+        return AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position)
     }
-    
-    
-    
     
     
     override func viewDidLoad() {
@@ -328,6 +337,7 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         cameraButton.addGestureRecognizer(cameraLongPressButtonRecognizer)
         setupView()
+        
     }
     override func encode(with coder: NSCoder) {
         super.encode(with: coder)
@@ -365,8 +375,6 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         boltButton.addTarget(self, action: #selector(changeFlashMode), for: .touchUpInside)
         switchButton.addTarget(self, action: #selector(switchCamera), for: .touchUpInside)
         volumeButton.addTarget(self, action: #selector(changeVolumeMode), for: .touchUpInside)
-        
-        
     }
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
@@ -378,6 +386,8 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             }, completion: { _ in
                 self.qrCodeFrameView?.isHidden = true
             })
+            
+            lastSearchedURL = ""
             print("No QR code is detected")
             return
         }
@@ -387,37 +397,39 @@ class ScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         if metadataObj.type == AVMetadataObject.ObjectType.qr {
             
-            let barCodeObject = previewLayer?.transformedMetadataObject(for: metadataObj)
-            if movieOutput.isRecording == false {
-                qrCodeFrameView?.isHidden = false
-            } else {
-                qrCodeFrameView?.isHidden = true
-            }
-            let bnds = barCodeObject!.bounds
-            
-            if self.qrCodeFrameView?.frame == CGRect.zero {
-                self.qrCodeFrameView?.frame = CGRect(x: bnds.minX - 5, y: bnds.minY - 2.5, width: bnds.width + 10, height: bnds.height + 10)
-            }
-            
-            
-            if(self.qrCodeFrameView != nil && isHighDifference(self.qrCodeFrameView!.frame, CGRect(x: bnds.minX - 5, y: bnds.minY - 2.5, width: bnds.width + 10, height: bnds.height + 10))) {
-                UIView.animate(withDuration: 0.2, animations: {
+            if let barCodeObject = previewLayer?.transformedMetadataObject(for: metadataObj) {
+                
+                if movieOutput.isRecording == false {
+                    qrCodeFrameView?.isHidden = false
+                } else {
+                    qrCodeFrameView?.isHidden = true
+                }
+                let bnds = barCodeObject.bounds
+                
+                if self.qrCodeFrameView?.frame == CGRect.zero {
                     self.qrCodeFrameView?.frame = CGRect(x: bnds.minX - 5, y: bnds.minY - 2.5, width: bnds.width + 10, height: bnds.height + 10)
+                }
+                
+                
+                if(self.qrCodeFrameView != nil && isHighDifference(self.qrCodeFrameView!.frame, CGRect(x: bnds.minX - 5, y: bnds.minY - 2.5, width: bnds.width + 10, height: bnds.height + 10))) {
+                    UIView.animate(withDuration: 0.2, animations: {
+                        self.qrCodeFrameView?.frame = CGRect(x: bnds.minX - 5, y: bnds.minY - 2.5, width: bnds.width + 10, height: bnds.height + 10)
+                    })
+                    
+                }
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.qrCodeFrameView?.alpha = 1
                 })
                 
-            }
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                self.qrCodeFrameView?.alpha = 1
-            })
-            
-            if metadataObj.stringValue != nil {
-                print(metadataObj.stringValue ?? "abacaba")
+                if metadataObj.stringValue != nil && !movieOutput.isRecording && metadataObj.stringValue != lastSearchedURL && metadataObj.stringValue != "" {
+                    lastSearchedURL = metadataObj.stringValue!
+                    openSafariAlert(metadataObj.stringValue ?? "Error url")
+                    print(metadataObj.stringValue ?? "UNREADABLE_STRING")
+                }
             }
         }
     }
-    
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -531,7 +543,6 @@ extension ScannerViewController: AVCaptureFileOutputRecordingDelegate {
             }
         }
         outputURL = nil
-        print("Just captured a video")
     }
     
     
@@ -608,20 +619,6 @@ extension ScannerViewController: AVCaptureFileOutputRecordingDelegate {
     
     
     
-    
-    
-    
-    @objc func stopRecording() {
-        
-        if movieOutput.isRecording == true {
-            print("Stop")
-            movieOutput.stopRecording()
-        }
-    }
-    
-    
-    
-    
     @objc func recordVideoAction(_ sender: UIButton) {
         
         if cameraLongPressButtonRecognizer.state == .began {
@@ -638,7 +635,6 @@ extension ScannerViewController: AVCaptureFileOutputRecordingDelegate {
             let fileUrl = paths[0].appendingPathComponent("output.mov")
             try? FileManager.default.removeItem(at: fileUrl)
             
-            print("start")
             boltButton.isHidden = true
             boltButton.isEnabled = false
             switchButton.isHidden = true
@@ -649,8 +645,10 @@ extension ScannerViewController: AVCaptureFileOutputRecordingDelegate {
             })
             
             cameraPanGestureRecognizer.isEnabled = true
+            cameraButton.progressAnimationStart()
             movieOutput.startRecording(to: fileUrl, recordingDelegate: self)
         } else if cameraLongPressButtonRecognizer.state == .ended{
+            cameraButton.progressAnimationStop()
             cameraButton.removeGestureRecognizer(cameraPanGestureRecognizer)
             print("Stop")
             cameraPanGestureRecognizer.isEnabled = false
